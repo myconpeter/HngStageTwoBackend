@@ -1,13 +1,30 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import connectDb from './config/database.js';
+import User from './models/User.js';
+
+import userRoute from './routes/auth.js';
 
 dotenv.config();
+connectDb();
 
-const app: Express = express();
-const PORT = process.env.PORT;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.get('/', (req: Request, res: Response) => {
-	res.status(200).send('hello world');
+app.use(express.json());
+
+connectDb();
+
+app.use(userRoute);
+
+app.get('/', async (req: Request, res: Response) => {
+	res.send('jjj');
+	// try {
+	// 	const users = await User.findAll();
+	// 	res.json(users);
+	// } catch (error) {
+	// 	res.status(500).json({ error: 'Failed to fetch data' });
+	// }
 });
 
 app.listen(PORT, () => {

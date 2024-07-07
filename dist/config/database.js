@@ -7,26 +7,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDb from './config/database.js';
-import userRoute from './routes/auth.js';
-dotenv.config();
-connectDb();
-const app = express();
-const PORT = process.env.PORT || 3000;
-app.use(express.json());
-connectDb();
-app.use(userRoute);
-app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('jjj');
-    // try {
-    // 	const users = await User.findAll();
-    // 	res.json(users);
-    // } catch (error) {
-    // 	res.status(500).json({ error: 'Failed to fetch data' });
-    // }
-}));
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+import sequelize from './config.js';
+const connectDb = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+        yield sequelize.sync({ force: true }); // Set to true to recreate tables on each run
+        console.log('All models were synchronized successfully.');
+    }
+    catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
 });
+export default connectDb;
